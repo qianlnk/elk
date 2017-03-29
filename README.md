@@ -4,9 +4,9 @@ Run the latest version of ELK stack with docker and docker-compose.
 
 ## Requirements
 
-1、docker
-2、docker-compose
-3、clone this repository
+* 1、 docker
+* 2、docker-compose
+* 3、clone this repository
 
 ### Docker
 
@@ -63,11 +63,11 @@ usually, I like run it in tmux.
 
 ## Ports
 
-*5000: logstash TCP input
-*5044: logstash filebeat input
-*9200: elasticsearch HTTP
-*9300: elasticsearch TCP
-*5601: kibana
+* 5000: logstash TCP input
+* 5044: logstash filebeat input
+* 9200: elasticsearch HTTP
+* 9300: elasticsearch TCP
+* 5601: kibana
 
 ## filebeat
 
