@@ -14,7 +14,7 @@ refer to [https://docs.docker.com/engine/installation/linux/ubuntu/#install-from
 
 ### Docker-compose
 
-Download it from [https://github.com/docker/compose/releases](https://github.com/docker/compose/releases)
+[Download](https://github.com/docker/compose/releases)
 ![](docker-compose.png)
 
 and run:
@@ -38,7 +38,8 @@ To do this follow the recommended instructions from the Elastic documentation: [
 ## SELinux
 
 On distributions which have SELinux enabled out-of-the-box you will need to either re-context the files or set SELinux into Permissive mode in order for docker-elk to start properly.
-For example on Redhat and CentOS, the following will apply the proper context:
+
+For example on Redhat and CentOS, the following will apply the proper context.
 
 ```shell
 $ chcon -R system_u:object_r:admin_home_t:s0 elk/
@@ -52,7 +53,50 @@ start ELK stack with docker-compose:
 docker-compose up
 ```
 
-usually, run it in tmux.
+or run it in background
+
+```shell
+docker-compose up -d
+```
+
+usually, I like run it in tmux.
+
+## Ports
+
+*5000: logstash TCP input
+*5044: logstash filebeat input
+*9200: elasticsearch HTTP
+*9300: elasticsearch TCP
+*5601: kibana
+
+## filebeat
+
+### install
+
+[Download](https://www.elastic.co/downloads/beats)
+
+update filebeat.yml
+
+```yml
+filebeat.prospectors:
+
+- input_type: log
+
+  paths:
+    - /Users/qianlnk/go/src/Nami/logs/nami.log
+  fields:
+    service: nami #use this field to flag which service is the log belong to.
+
+- input_type: log
+  paths:
+    - /Users/qianlnk/go/src/Nami/franky/logs/workers.log
+  fields:
+    service: worker
+
+output.logstash:
+  enabled: true
+  hosts: ["10.17.1.67:5044"]
+```
 
 ## Config
 
@@ -61,9 +105,24 @@ usually, run it in tmux.
 The logstash config file is stroed in `logstash/config/logstash.yml`
 and config `input` `output` in `logstash/pipeline/`.
 
+### kibana
+
+The kibana config file is stored in `kibana/config/kabana.yml`
+
 ### elasticsearch
 
 The elasticsearch config file is stored in `elasticsearch/config/elasticsearch.yml`
+
+### How to stored elasticsearch data
+
+add valumes to docker-compose.yml
+
+```yml
+volumes:
+    - /path/to/storage:/usr/share/elasticsearch/data
+```
+
+This will store elasticsearch data inside `/path/to/storage`
 
 ### How to scale up the elasticsearch cluster
 

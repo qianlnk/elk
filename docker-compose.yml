@@ -3,10 +3,12 @@ version: '2'
 services:
 
   elasticsearch:
-    build: elasticsearch/
+    build: ./elasticsearch
     ports:
       - "9200:9200"
       - "9300:9300"
+    volumes: 
+      - ./elasticsearch/config:/usr/share/elasticsearch/config
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       # disable X-Pack
@@ -27,6 +29,7 @@ services:
       - ./logstash/logs:/data/logs
     ports:
       - "5000:5000"
+      - "5044:5044"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
@@ -35,7 +38,7 @@ services:
       - elasticsearch
 
   kibana:
-    image: kibana:latest
+    build: ./kibana
     volumes:
       - ./kibana/config/:/usr/share/kibana/config
     ports:
